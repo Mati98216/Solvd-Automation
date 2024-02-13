@@ -22,17 +22,7 @@ public class CommentAPITests {
         };
     }
 
-    @Test(description = "Verify retrieval of an existing comment by ID")
-    public void shouldRetrieveCommentById() {
-        Comment comment = new Comment();
-        comment.setId(1);
 
-        SingleCommentRetrievalService commentRetrieval = new SingleCommentRetrievalService(comment.getId());
-        commentRetrieval.addProperty("comment", comment);
-        commentRetrieval.callAPIExpectSuccess();
-
-        commentRetrieval.validateResponse();
-    }
 
     @Test(description = "Verify that the retrieved list of comments conforms to the schema")
     public void shouldMatchCommentListSchema() {
@@ -43,25 +33,20 @@ public class CommentAPITests {
         commentsRetrieval.validateResponseAgainstSchema("api/comments/_get/rs.schema");
     }
 
-    @Test(dataProvider = "dataForCommentCreation")
-    public void shouldCreateCommentSuccessfully(Integer postId, String name, String email, String body) {
-        Post post = new Post();
-        post.setId(postId);
 
-        Comment comment = new Comment();
-        comment.setPost(post);
-        comment.setName(name);
-        comment.setEmail(email);
-        comment.setBody(body);
+    private static Comment parseCommentFromJson(JsonPath jsonPath) {
+        Post associatedPost = new Post();
+        associatedPost.setId(jsonPath.getInt("postId"));
 
-        CommentCreationService commentCreation = new CommentCreationService();
-        commentCreation.addProperty("comment", comment);
+        Comment parsedComment = new Comment();
+        parsedComment.setId(jsonPath.getInt("id"));
+        parsedComment.setPost(associatedPost);
+        parsedComment.setName(jsonPath.getString("name"));
+        parsedComment.setEmail(jsonPath.getString("email"));
+        parsedComment.setBody(jsonPath.getString("body"));
 
-        commentCreation.callAPIExpectSuccess();
-
-        commentCreation.validateResponse();
+        return parsedComment;
     }
-
     @Test
     public void shouldCreateAndUpdateComment() {
         Post post = new Post();
@@ -91,18 +76,35 @@ public class CommentAPITests {
         commentUpdate.callAPIExpectSuccess();
         commentUpdate.validateResponse();
     }
+    @Test(dataProvider = "dataForCommentCreation")
+    public void shouldCreateCommentSuccessfully(Integer postId, String name, String email, String body) {
+        Post post = new Post();
+        post.setId(postId);
 
-    private static Comment parseCommentFromJson(JsonPath jsonPath) {
-        Post associatedPost = new Post();
-        associatedPost.setId(jsonPath.getInt("postId"));
+        Comment comment = new Comment();
+        comment.setPost(post);
+        comment.setName(name);
+        comment.setEmail(email);
+        comment.setBody(body);
 
-        Comment parsedComment = new Comment();
-        parsedComment.setId(jsonPath.getInt("id"));
-        parsedComment.setPost(associatedPost);
-        parsedComment.setName(jsonPath.getString("name"));
-        parsedComment.setEmail(jsonPath.getString("email"));
-        parsedComment.setBody(jsonPath.getString("body"));
+        CommentCreationService commentCreation = new CommentCreationService();
+        commentCreation.addProperty("comment", comment);
 
-        return parsedComment;
+        commentCreation.callAPIExpectSuccess();
+
+        commentCreation.validateResponse();
     }
+
+    @Test(description = "Verify retrieval of an existing comment by ID")
+    public void shouldRetrieveCommentById() {
+        Comment comment = new Comment();
+        comment.setId(1);
+
+        SingleCommentRetrievalService commentRetrieval = new SingleCommentRetrievalService(comment.getId());
+        commentRetrieval.addProperty("comment", comment);
+        commentRetrieval.callAPIExpectSuccess();
+
+        commentRetrieval.validateResponse();
+    }
+
 }
