@@ -14,8 +14,8 @@ import com.zebrunner.carina.api.http.HttpResponseStatusType;
 @ResponseTemplatePath(path = "api/comments/_post/rs.ftl")
 @RequestTemplatePath(path = "api/comments/_post/rq.ftl")
 @SuccessfulHttpStatus(status = HttpResponseStatusType.CREATED_201)
-public class CreateComments extends AbstractApiMethodV2 {
-    public CreateComments() {
+public class CommentCreationService extends AbstractApiMethodV2 {
+    public CommentCreationService() {
         ignorePropertiesProcessor(NotStringValuesProcessor.class);
     }
 }
