@@ -2,7 +2,6 @@ package com.solvd.laba.testing.web;
 
 import com.solvd.laba.web.ShoppingCartPage;
 import com.solvd.laba.web.components.ShoppingCartItem;
-import com.solvd.laba.web.OrderCompletionPage;
 import com.solvd.laba.web.CheckoutDetailsPage;
 import com.solvd.laba.web.OrderSummaryPage;
 import com.solvd.laba.web.LoginPage;
@@ -158,8 +157,8 @@ public class WebTest extends AbstractTest {
                 R.TESTDATA.get("last_name"),
                 R.TESTDATA.get("code")
         );
-        OrderCompletionPage orderCompletionPage = orderSummaryPage.finalizeOrder();
-        assertTrue(orderCompletionPage.isOrderCompletionDisplayed(), "A confirmation of order completion should be visibly presented.");
+        orderSummaryPage.finalizeOrder();
+        assertTrue(orderSummaryPage.isOrderCompletionDisplayed(), "A confirmation of order completion should be visibly presented.");
     }
 
 }

@@ -1,6 +1,5 @@
 package com.solvd.laba.web;
 
-import com.solvd.laba.web.OrderCompletionPage;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import com.zebrunner.carina.webdriver.gui.AbstractPage;
 import lombok.Getter;
@@ -13,12 +12,21 @@ public class OrderSummaryPage extends AbstractPage {
     @FindBy(id = "finish")
     private ExtendedWebElement completeOrderButton;
 
+    @FindBy(id = "checkout_complete_container")
+    private ExtendedWebElement checkoutCompletionIndicator;
+
     public OrderSummaryPage(WebDriver driver) {
         super(driver);
     }
 
-    public OrderCompletionPage finalizeOrder() {
+
+    public OrderSummaryPage finalizeOrder() {
         completeOrderButton.click();
-        return new OrderCompletionPage(getDriver());
+        return this;
+    }
+
+
+    public boolean isOrderCompletionDisplayed() {
+        return checkoutCompletionIndicator.isDisplayed();
     }
 }
