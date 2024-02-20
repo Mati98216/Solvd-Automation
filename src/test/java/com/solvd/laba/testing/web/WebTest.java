@@ -9,10 +9,10 @@ import com.solvd.laba.web.LoginPage;
 import com.solvd.laba.web.ProductListingPage;
 import com.solvd.laba.web.components.ProductCatalog;
 import com.solvd.laba.web.components.MainNavigationMenu;
-import com.solvd.laba.web.components.ProductSortingMenu;
 import com.solvd.laba.web.service.UserAuthenticationService;
 import com.zebrunner.carina.core.AbstractTest;
 import com.zebrunner.carina.utils.R;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -78,17 +78,30 @@ public class WebTest extends AbstractTest {
      * 5. Confirm post-sort reordering reflects ascending price.
      */
     @Test
-    public void sortProductsByPriceAscendingTest() {
+    public void testProductSorting() {
+        // Log in and get to the product listing page
         UserAuthenticationService authService = new UserAuthenticationService();
         ProductListingPage productListingPage = authService.successfulLogin();
         ProductCatalog productCatalog = productListingPage.getProductCatalog();
-        assertTrue(productCatalog.areProductsDisplayed(), "Products should be visibly listed before sort operation.");
-        List<Double> initialProductPrices = productCatalog.getProductPrices();
-        ProductSortingMenu sortingMenu = productListingPage.getProductSortingMenu();
-        sortingMenu.sortProductsBy(R.TESTDATA.get("price_sort_direction"));
-        List<Double> adjustedProductPrices = productCatalog.getProductPrices();
-        assertNotEquals(initialProductPrices, adjustedProductPrices, "Product listing should reflect a reordering post-price sort.");
-        assertTrue(productCatalog.isPriceSortedDescending(adjustedProductPrices), "Expected ascending price sort to correctly reorder products.");
+
+        // Ensure products are displayed before sorting
+        Assert.assertTrue(productCatalog.areProductsDisplayed(), "Products should be visibly listed before sort operation.");
+
+        // Test sorting by PRICE_LOW_TO_HIGH and verify
+        Assert.assertTrue(productCatalog.sortAndVerify(ProductCatalog.SortOrder.PRICE_LOW_TO_HIGH),
+                "Products should be sorted in ascending order by price.");
+
+        // Test sorting by PRICE_HIGH_TO_LOW and verify
+        Assert.assertTrue(productCatalog.sortAndVerify(ProductCatalog.SortOrder.PRICE_HIGH_TO_LOW),
+                "Products should be sorted in descending order by price.");
+
+        // Test sorting by A_TO_Z and verify
+        Assert.assertTrue(productCatalog.sortAndVerify(ProductCatalog.SortOrder.A_TO_Z),
+                "Products should be sorted alphabetically from A to Z.");
+
+        // Test sorting by Z_TO_A and verify
+        Assert.assertTrue(productCatalog.sortAndVerify(ProductCatalog.SortOrder.Z_TO_A),
+                "Products should be sorted alphabetically from Z to A.");
     }
 
     /**
@@ -106,9 +119,9 @@ public class WebTest extends AbstractTest {
         ProductListingPage productListingPage = authService.successfulLogin();
         ProductCatalog productCatalog = productListingPage.getProductCatalog();
         assertTrue(productCatalog.areProductsDisplayed(), "All products should be on display before cart operations.");
-        assertTrue(productCatalog.checkAddButtonDisplay(), "An 'Add to Cart' option is expected for each product.");
+        assertTrue(productCatalog.areAddToCartButtonsVisible(), "An 'Add to Cart' option is expected for each product.");
         productCatalog.addAllItemsToCart();
-        assertTrue(productCatalog.checkRemoveButtonDisplay(), "Post-addition, 'Remove' options should replace 'Add to Cart' buttons.");
+        assertTrue(productCatalog.areRemoveFromCartButtonsVisible(), "Post-addition, 'Remove' options should replace 'Add to Cart' buttons.");
         int totalProductsAdded = productCatalog.getProductList().size();
         MainNavigationMenu navigationMenu = productListingPage.getMainNavigationMenu();
         ShoppingCartPage cartPage = navigationMenu.navigateToShoppingCart();

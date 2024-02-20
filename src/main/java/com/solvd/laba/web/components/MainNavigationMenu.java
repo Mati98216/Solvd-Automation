@@ -30,7 +30,7 @@ public class MainNavigationMenu extends AbstractUIObject {
 
     public LoginPage signOut() {
         menuToggleButton.click();
-        waitUntil(ExpectedConditions.visibilityOf(logoutLink), 5);
+        waitUntil(ExpectedConditions.visibilityOf(logoutLink), 10);
         logoutLink.click();
         return new LoginPage(getDriver());
     }
