@@ -42,12 +42,7 @@ public class LoginPage extends AbstractPage {
         return loginErrorNotification.isVisible();
     }
 
-    public ProductListingPage successfulLogin() {
-        typeUserLogin(R.TESTDATA.get("valid_user"));
-        typeUserPassword(R.TESTDATA.get("valid_password"));
-        submitLogin();
-        return new ProductListingPage(getDriver());
-    }
+
 
     public ProductListingPage loginAndNavigate(String login, String password) {
         typeUserLogin(login);
