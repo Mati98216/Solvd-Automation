@@ -2,6 +2,7 @@ package com.solvd.laba.web;
 
 
 import com.solvd.laba.web.ProductListingPage;
+import com.zebrunner.carina.utils.R;
 import com.zebrunner.carina.webdriver.decorator.ExtendedWebElement;
 import com.zebrunner.carina.webdriver.gui.AbstractPage;
 import lombok.Getter;
@@ -39,6 +40,13 @@ public class LoginPage extends AbstractPage {
 
     public boolean isErrorOutputVisible() {
         return loginErrorNotification.isVisible();
+    }
+
+    public ProductListingPage successfulLogin() {
+        typeUserLogin(R.TESTDATA.get("valid_user"));
+        typeUserPassword(R.TESTDATA.get("valid_password"));
+        submitLogin();
+        return new ProductListingPage(getDriver());
     }
 
     public ProductListingPage loginAndNavigate(String login, String password) {

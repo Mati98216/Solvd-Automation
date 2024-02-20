@@ -9,7 +9,6 @@ import com.solvd.laba.web.LoginPage;
 import com.solvd.laba.web.ProductListingPage;
 import com.solvd.laba.web.components.ProductCatalog;
 import com.solvd.laba.web.components.MainNavigationMenu;
-import com.solvd.laba.web.service.UserAuthenticationService;
 import com.zebrunner.carina.core.AbstractTest;
 import com.zebrunner.carina.utils.R;
 import org.testng.Assert;
@@ -30,9 +29,10 @@ public class WebTest extends AbstractTest {
      */
     @Test
     public void logoutTest() {
-        UserAuthenticationService authService = new UserAuthenticationService();
-        ProductListingPage productListingPage = authService.successfulLogin();
-        LoginPage loginPage = productListingPage.getMainNavigationMenu().signOut();
+        LoginPage loginPage = new LoginPage(getDriver());
+        loginPage.open();
+        ProductListingPage productListingPage = loginPage.loginAndNavigate(R.TESTDATA.get("valid_user"), R.TESTDATA.get("valid_password"));
+        loginPage = productListingPage.getMainNavigationMenu().signOut();
         assertTrue(loginPage.isPageOpened(), "Expecting the login interface post-logout to confirm user has been logged out.");
     }
 
@@ -84,8 +84,9 @@ public class WebTest extends AbstractTest {
     @Test
     public void testProductSorting() {
         // Log in and get to the product listing page
-        UserAuthenticationService authService = new UserAuthenticationService();
-        ProductListingPage productListingPage = authService.successfulLogin();
+        LoginPage loginPage = new LoginPage(getDriver());
+        loginPage.open();
+        ProductListingPage productListingPage = loginPage.loginAndNavigate(R.TESTDATA.get("valid_user"), R.TESTDATA.get("valid_password"));
         ProductCatalog productCatalog = productListingPage.getProductCatalog();
 
         // Ensure products are displayed before sorting
@@ -119,8 +120,9 @@ public class WebTest extends AbstractTest {
      */
     @Test
     public void addItemsToCartTest() {
-        UserAuthenticationService authService = new UserAuthenticationService();
-        ProductListingPage productListingPage = authService.successfulLogin();
+        LoginPage loginPage = new LoginPage(getDriver());
+        loginPage.open();
+        ProductListingPage productListingPage = loginPage.loginAndNavigate(R.TESTDATA.get("valid_user"), R.TESTDATA.get("valid_password"));
         ProductCatalog productCatalog = productListingPage.getProductCatalog();
         assertTrue(productCatalog.areProductsDisplayed(), "All products should be on display before cart operations.");
         assertTrue(productCatalog.areAddToCartButtonsVisible(), "An 'Add to Cart' option is expected for each product.");
@@ -143,8 +145,9 @@ public class WebTest extends AbstractTest {
      */
     @Test
     public void checkoutTest() {
-        UserAuthenticationService authService = new UserAuthenticationService();
-        ProductListingPage productListingPage = authService.successfulLogin();
+        LoginPage loginPage = new LoginPage(getDriver());
+        loginPage.open();
+        ProductListingPage productListingPage = loginPage.loginAndNavigate(R.TESTDATA.get("valid_user"), R.TESTDATA.get("valid_password"));
         ProductCatalog productCatalog = productListingPage.getProductCatalog();
         productCatalog.addAllItemsToCart();
         MainNavigationMenu navigationMenu = productListingPage.getMainNavigationMenu();
