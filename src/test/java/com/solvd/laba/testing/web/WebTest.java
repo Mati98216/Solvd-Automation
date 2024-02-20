@@ -69,13 +69,17 @@ public class WebTest extends AbstractTest {
     }
 
     /**
-     * Sorting and verifying product order by ascending price.
+     * Verifying product sorting functionality across various criteria.
      * Workflow:
-     * 1. Authenticate with correct details.
-     * 2. Transition to the product overview screen.
-     * 3. Confirm product presentation pre-sort.
-     * 4. Execute a high-to-low price sort.
-     * 5. Confirm post-sort reordering reflects ascending price.
+     * 1. Authenticate with correct details to access the application.
+     * 2. Transition to the product overview screen to view the list of available products.
+     * 3. Confirm that products are presented on the screen before initiating any sorting operations.
+     * 4. Execute sorting by price in ascending order (PRICE_LOW_TO_HIGH) and verify that the products are correctly sorted according to this criterion.
+     * 5. Execute sorting by price in descending order (PRICE_HIGH_TO_LOW) and verify that the products are correctly sorted according to this criterion.
+     * 6. Execute alphabetical sorting from A to Z (A_TO_Z) and verify that the products are correctly sorted according to this criterion.
+     * 7. Execute alphabetical sorting from Z to A (Z_TO_A) and verify that the products are correctly sorted according to this criterion.
+     *
+     * Each sorting operation is followed by a verification step to ensure that the sorting reflects the expected order based on the selected criterion.
      */
     @Test
     public void testProductSorting() {
