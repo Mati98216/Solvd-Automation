@@ -1,6 +1,5 @@
 package com.solvd.laba.api;
 
-
 import com.zebrunner.carina.api.AbstractApiMethodV2;
 import com.zebrunner.carina.api.annotation.Endpoint;
 import com.zebrunner.carina.api.annotation.RequestTemplatePath;
@@ -9,13 +8,14 @@ import com.zebrunner.carina.api.annotation.SuccessfulHttpStatus;
 import com.zebrunner.carina.api.apitools.builder.NotStringValuesProcessor;
 import com.zebrunner.carina.api.http.HttpMethodType;
 import com.zebrunner.carina.api.http.HttpResponseStatusType;
+@Endpoint(url = "${config.api_url}/comments/${comment_id}", methodType = HttpMethodType.PATCH)
+@SuccessfulHttpStatus(status = HttpResponseStatusType.OK_200)
+@RequestTemplatePath(path = "api/comments/_patch/rq.ftl")
+@ResponseTemplatePath(path = "api/comments/_patch/rs.ftl")
+public class PatchComment extends AbstractApiMethodV2 {
+    public PatchComment(int commentId) {
+        replaceUrlPlaceholder("comment_id", Integer.toString(commentId));
 
-@Endpoint(url = "${config.api_url}/comments", methodType = HttpMethodType.POST)
-@ResponseTemplatePath(path = "api/comments/_post/rs.ftl")
-@RequestTemplatePath(path = "api/comments/_post/rq.ftl")
-@SuccessfulHttpStatus(status = HttpResponseStatusType.CREATED_201)
-public class CommentCreationService extends AbstractApiMethodV2 {
-    public CommentCreationService() {
         ignorePropertiesProcessor(NotStringValuesProcessor.class);
     }
 }
